@@ -1,17 +1,14 @@
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field
 
 
 class User(BaseModel):
     id: int = Field(ge=0, frozen=True)
-    # целое число, больше 0, без возможности изменения
     phone: str = Field(default='', min_length=10, max_length=10, pattern=r'^\d*$')
-    # текстовый тип, разрешены только цифры, 10 символов, по умолчанию пустая строка
     name: str = Field(default='Безымянный', min_length=1, max_length=50)
-    # текстовый тип, от 1 до 50 символов, значение по умолчанию = 'Безымянный'
 
 
 try:
     user = User(id=1)
     print(user)
 except ValueError:
-    print
+    pass
