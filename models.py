@@ -7,8 +7,9 @@ class User(BaseModel):
     name: str = Field(default='Безымянный', min_length=1, max_length=50)
 
 
-try:
-    user = User(id=1)
-    print(user)
-except ValueError:
-    pass
+if __name__ == '__main__':
+    try:
+        user = User(id=1)
+        print(user)
+    except ValueError:
+        pass
