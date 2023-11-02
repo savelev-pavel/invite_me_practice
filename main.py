@@ -1,5 +1,8 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
+from fastapi.exceptions import ResponseValidationError
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 from test_user_db import users_db
 from pydantic_models import User
 
@@ -21,6 +24,15 @@ def users(user_id: int):
 def user(user_id: int):
     current_user = [user for user in users_db if user.get('id') == user_id][0]
     return current_user
+
+
+@app.exception_handler(ResponseValidationError)
+async def validation_exception_handler(request: Request, exc: ResponseValidationError):
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content=jsonable_encoder({'details': exc.errors()})
+    )
+
 
 
 if __name__ == '__main__':
