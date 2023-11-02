@@ -1,6 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from test_user_db import users_db
+from pydantic_models import User
 
 app = FastAPI(title='Invite me')
 
@@ -13,13 +14,13 @@ def root_page():
 @app.get("/users/")
 def users(user_id: int):
     name = list(filter(lambda user: user.get('id') == user_id, users_db))[0]
-    return f'Hello, {name.get('name')}'
+    return {'msg': f'Hello, {name.get('name')}'}
 
 
-@app.get("/user/{user_id}")
-def users(user_id: int):
+@app.get("/user/{user_id}", response_model=User)
+def user(user_id: int):
     current_user = [user for user in users_db if user.get('id') == user_id][0]
-    return f'My name is {current_user.get('name')}'
+    return current_user
 
 
 if __name__ == '__main__':
